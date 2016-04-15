@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
 
   spec.add_runtime_dependency "i2c", ">= 0.4.0"
-  spec.add_runtime_dependency "i2c", "~> 2.14"
+  spec.add_runtime_dependency "rmagick", "~> 2.14"
 end
