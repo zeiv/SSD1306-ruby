@@ -37,7 +37,7 @@ SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL = 0x29
 SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
 
   class Display
-    attr_accessor :protocol, :path, :address, :width, :height
+    attr_accessor :protocol, :path, :address, :width, :height, :buffer
 
     def initialize(opts = {})
       default_options = {
@@ -49,14 +49,11 @@ SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
       }
       options = default_options.merge(opts)
 
-      # Attributes for attr_accessor
       @protocol = options[:protocol]
       @path = options[:path]
       @address = options[:address]
       @width = options[:width]
       @height = options[:height]
-
-      # Variables needed internally
       @pages = @height / 8
       @buffer = [0]*(@width*@pages)
       if @protocol == :i2c
@@ -120,7 +117,7 @@ SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
       self.command(@pages - 1)
       # Write buffer data
       # TODO: This works for I2C only
-      for i in range(0, @buffer.length, 16)
+      for i in (0..@buffer.length).step(16)
         control = 0x40
         @interface.write control, @buffer[i:i+16]
       end
@@ -137,7 +134,7 @@ SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
 
     def clear!
       self.clear
-      self.display
+      self.display!
     end
 
     #TODO Implement Contrast functionality
