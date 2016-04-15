@@ -138,10 +138,8 @@ SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
       self.command(@pages - 1)
       # Write buffer data
       # TODO: This works for I2C only
-      for i in (0..@buffer.length).step(16)
-        control = 0x40
-        @interface.write @address, control, @buffer[i..i+16].pack('c*')
-      end
+      control = 0x40
+      @interface.write @address, control, @buffer.pack('c*')
     end
 
     #TODO Complete image processing
