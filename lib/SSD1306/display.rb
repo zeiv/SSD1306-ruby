@@ -163,6 +163,7 @@ module SSD1306
 
     def clear
       @buffer = [0]*(@width*@pages)
+      @cursor.reset
     end
 
     def clear!
@@ -174,6 +175,7 @@ module SSD1306
       string.each_byte do |c|
         self.print_char c
       end
+      string
     end
 
     def println(string)
@@ -181,11 +183,11 @@ module SSD1306
         self.print_char c
       end
       self.print_char 10 # 10 is ASCII for \n
+      string
     end
 
-    #TODO Do font_size
     def font_size(new_size)
-      raise "font_size not yet implemented"
+      @cursor.size = new_size
     end
 
     #TODO Implement Contrast functionality
@@ -208,7 +210,23 @@ module SSD1306
         @cursor.newline
       elsif b > 31
         for i in 0...5
-          @buffer[@cursor.buffer_index + i] = FONT[(b*5) + i]
+          if @cursor.size == 1
+            @buffer[@cursor.buffer_index + i] = FONT[(b*5) + i]
+          else
+            byte = FONT[(b*5) + i].to_s(2).rjust(8, '0')
+            a = byte.chars.each_slice(8/@cursor.size).map(&:join)
+            bytes = []
+            a.each do |e|
+              bytes << e.chars.map {|c| c*(8/e.length)}.join
+            end
+            bytes = bytes.map {|b| b.to_i(2)}
+            bytes.reverse!
+            for page in 0...@cursor.size
+              for x_interval in 0...@cursor.size
+                @buffer[@cursor.buffer_index(page) + i*@cursor.size + x_interval] = bytes[page]
+              end
+            end
+          end
         end
         @cursor.increment
       end

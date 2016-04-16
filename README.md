@@ -37,7 +37,9 @@ Writing text on the display is simple:
 
 ```ruby
 disp.println "This is my IP Address:"
-disp.print ip_address
+disp.println "" # The same as disp.print "\n"
+disp.font_size 2
+disp.println ip_address
 disp.display!
 ```
 
@@ -65,7 +67,7 @@ Check out the source code for additional information.  It's not very hard to rea
 
 ## To-do
 
-* Implement `font_size`.  Currently only one font size for `print` is supported. (For v0.5) In the meantime, to use other fonts or font sizes, I recommend using RMagick's `annotate` feature and passing in an image.
+* Currently only 1, 2, and 4 work as font sizes. In the meantime, to use other fonts or font sizes, I recommend using RMagick's `annotate` feature and passing in an image.
 * Implement SPI.  Only I2C is currently supported. (For v1.0)
 
 ## Development
