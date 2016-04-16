@@ -37,7 +37,7 @@ module SSD1306
   SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
 
   class Display
-    attr_accessor :protocol, :path, :address, :width, :height, :buffer, :vccstate, :interface
+    attr_accessor :protocol, :path, :address, :width, :height, :buffer, :vccstate, :interface, :cursor
 
     def initialize(opts = {})
       default_options = {
@@ -59,6 +59,7 @@ module SSD1306
       @vccstate = options[:vccstate]
       @pages = @height / 8
       @buffer = [0]*(@width*@pages)
+      @cursor = Cursor.new
       @reset = options[:reset]
       if @protocol == :i2c
         @interface = I2C.create(@path)
@@ -109,6 +110,7 @@ module SSD1306
       end
 
       self.command SSD1306_DISPLAYON
+      self.clear!
     end
 
     def reset
@@ -168,6 +170,24 @@ module SSD1306
       self.display!
     end
 
+    def print(string)
+      string.each_byte do |c|
+        self.print_char c
+      end
+    end
+
+    def println(string)
+      string.each_byte do |c|
+        self.print_char c
+      end
+      self.print_char 10 # 10 is ASCII for \n
+    end
+
+    #TODO Do font_size
+    def font_size(new_size)
+      raise "font_size not yet implemented"
+    end
+
     #TODO Implement Contrast functionality
     def set_contrast(contrast)
       raise "Contrast not yet implemented"
@@ -176,6 +196,22 @@ module SSD1306
     #TODO Implement Dimming functionality
     def dim(dim)
       raise "Dim not implemented yet"
+    end
+
+    protected
+
+    # This skips to a newlien if the byte is a LF newline,
+    # otherwise it prints the character, but only if it is
+    # in fact a character (i.e., ASCII greater than 31).
+    def print_char(b)
+      if b == 10
+        @cursor.newline
+      elsif b > 31
+        for i in 0...5
+          @buffer[@cursor.buffer_index + i] = FONT[(b*5) + i]
+        end
+        @cursor.increment
+      end
     end
   end
 end
