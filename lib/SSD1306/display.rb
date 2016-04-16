@@ -144,14 +144,15 @@ module SSD1306
 
     def image(image)
       image.image_type = BilevelType
-      pix = image.export_pixels
+      pix = image.export_pixels(0, 0, @width, @height, 'I')
       index = 0
-      for page in 0..(@pages - 1)
-        for x in 0..(@width - 1)
+      for page in 0...@pages
+        for x in 0...@width
           bits = 0
           for bit in [0, 1, 2, 3, 4, 5, 6, 7]
             bits = bits << 1
-            bits |= pix[(page*8*@width) + x + (bit*@width)] == 0 ? 0 : 1
+            bits |= pix[(page*8*@width) + x + ((7-bit)*@width)] == 0 ? 0 : 1
+          end
           @buffer[index] = bits
           index += 1
         end
