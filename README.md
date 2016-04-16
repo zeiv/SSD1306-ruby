@@ -22,34 +22,44 @@ Or install it yourself as:
 
 Using the library is simple.  To start with, require the library and initialize the display:
 
-    require 'SSD1306'
-    disp = SSD1306::Display.new
+```ruby
+require 'SSD1306'
+disp = SSD1306::Display.new
+```
 
 The default options are suitable for the Raspberry Pi and a 128x64 display.  These can be overridden by specifying values like so:
 
-    disp = SSD1306::Display.new(protocol: :i2c, path: '/dev/i2c-1', address: 0x3C, width: 128, height: 64)
+```ruby
+disp = SSD1306::Display.new(protocol: :i2c, path: '/dev/i2c-1', address: 0x3C, width: 128, height: 64)
+```
 
 Writing text on the display is simple:
 
-    disp.println "This is my IP Address:"
-    disp.print ip_address
-    disp.display!
+```ruby
+disp.println "This is my IP Address:"
+disp.print ip_address
+disp.display!
+```
 
 You can also display monochrome images:
 
-    include Magick  # RMagick is a dependency
-    image = Image.read("path/to/my/image.png").first # Image.read returns an array
+```ruby
+include Magick  # RMagick is a dependency
+image = Image.read("path/to/my/image.png").first # Image.read returns an array
 
-    disp.image(image) # Pass in an RMagick image object
-    disp.display!
+disp.image(image) # Pass in an RMagick image object
+disp.display!
+```
 
 They display can also be easily cleared:
 
-    disp.clear
-    disp.display!
+```ruby
+disp.clear
+disp.display!
 
-    # Or more simply:
-    disp.clear!
+# Or more simply:
+disp.clear!
+```
 
 Check out the source code for additional information.  It's not very hard to read.
 
@@ -74,4 +84,4 @@ This library is inspired by the Adafruit SSD1306 Python library, available here:
 
 ## License
 
-Copyright (c) 2016 Xavier Bick under the MIT License.  See LICENSE.txt for details.
+Copyright (c) 2016 Xavier Bick under the MIT License.  See the LICENSE file for details.
