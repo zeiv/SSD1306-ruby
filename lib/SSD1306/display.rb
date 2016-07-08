@@ -206,7 +206,7 @@ module SSD1306
 
     protected
 
-    # This skips to a newlien if the byte is a LF newline,
+    # This skips to a newline if the byte is a LF newline,
     # otherwise it prints the character, but only if it is
     # in fact a character (i.e., ASCII greater than 31).
     def print_char(b)
