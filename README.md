@@ -38,7 +38,7 @@ Writing text on the display is simple:
 ```ruby
 disp.println "This is my IP Address:"
 disp.println "" # The same as disp.print "\n"
-disp.font_size 2
+disp.font_size = 2
 disp.println ip_address
 disp.display!
 ```
