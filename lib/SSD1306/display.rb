@@ -1,40 +1,40 @@
 module SSD1306
   # Constants
-  SSD1306_I2C_ADDRESS = 0x3C	# 011110+SA0+RW - 0x3C or 0x3D
-  SSD1306_SETCONTRAST = 0x81
+  SSD1306_I2C_ADDRESS         = 0x3C	# 011110+SA0+RW - 0x3C or 0x3D
+  SSD1306_SETCONTRAST         = 0x81
   SSD1306_DISPLAYALLON_RESUME = 0xA4
-  SSD1306_DISPLAYALLON = 0xA5
-  SSD1306_NORMALDISPLAY = 0xA6
-  SSD1306_INVERTDISPLAY = 0xA7
-  SSD1306_DISPLAYOFF = 0xAE
-  SSD1306_DISPLAYON = 0xAF
-  SSD1306_SETDISPLAYOFFSET = 0xD3
-  SSD1306_SETCOMPINS = 0xDA
-  SSD1306_SETVCOMDETECT = 0xDB
-  SSD1306_SETDISPLAYCLOCKDIV = 0xD5
-  SSD1306_SETPRECHARGE = 0xD9
-  SSD1306_SETMULTIPLEX = 0xA8
-  SSD1306_SETLOWCOLUMN = 0x00
-  SSD1306_SETHIGHCOLUMN = 0x10
-  SSD1306_SETSTARTLINE = 0x40
-  SSD1306_MEMORYMODE = 0x20
-  SSD1306_COLUMNADDR = 0x21
-  SSD1306_PAGEADDR = 0x22
-  SSD1306_COMSCANINC = 0xC0
-  SSD1306_COMSCANDEC = 0xC8
-  SSD1306_SEGREMAP = 0xA0
-  SSD1306_CHARGEPUMP = 0x8D
-  SSD1306_EXTERNALVCC = 0x1
-  SSD1306_SWITCHCAPVCC = 0x2
+  SSD1306_DISPLAYALLON        = 0xA5
+  SSD1306_NORMALDISPLAY       = 0xA6
+  SSD1306_INVERTDISPLAY       = 0xA7
+  SSD1306_DISPLAYOFF          = 0xAE
+  SSD1306_DISPLAYON           = 0xAF
+  SSD1306_SETDISPLAYOFFSET    = 0xD3
+  SSD1306_SETCOMPINS          = 0xDA
+  SSD1306_SETVCOMDETECT       = 0xDB
+  SSD1306_SETDISPLAYCLOCKDIV  = 0xD5
+  SSD1306_SETPRECHARGE        = 0xD9
+  SSD1306_SETMULTIPLEX        = 0xA8
+  SSD1306_SETLOWCOLUMN        = 0x00
+  SSD1306_SETHIGHCOLUMN       = 0x10
+  SSD1306_SETSTARTLINE        = 0x40
+  SSD1306_MEMORYMODE          = 0x20
+  SSD1306_COLUMNADDR          = 0x21
+  SSD1306_PAGEADDR            = 0x22
+  SSD1306_COMSCANINC          = 0xC0
+  SSD1306_COMSCANDEC          = 0xC8
+  SSD1306_SEGREMAP            = 0xA0
+  SSD1306_CHARGEPUMP          = 0x8D
+  SSD1306_EXTERNALVCC         = 0x1
+  SSD1306_SWITCHCAPVCC        = 0x2
 
   # Scrolling constants
-  SSD1306_ACTIVATE_SCROLL = 0x2F
+  SSD1306_ACTIVATE_SCROLL   = 0x2F
   SSD1306_DEACTIVATE_SCROLL = 0x2E
   SSD1306_SET_VERTICAL_SCROLL_AREA = 0xA3
-  SSD1306_RIGHT_HORIZONTAL_SCROLL = 0x26
-  SSD1306_LEFT_HORIZONTAL_SCROLL = 0x27
+  SSD1306_RIGHT_HORIZONTAL_SCROLL  = 0x26
+  SSD1306_LEFT_HORIZONTAL_SCROLL   = 0x27
   SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL = 0x29
-  SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL = 0x2A
+  SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL  = 0x2A
 
   class Display
     attr_accessor :protocol, :path, :address, :width, :height, :buffer, :vccstate, :interface, :cursor
@@ -42,25 +42,25 @@ module SSD1306
     def initialize(opts = {})
       default_options = {
         protocol: :i2c,
-        path: '/dev/i2c-1',
-        address: 0x3C,
-        width: 128,
-        height: 64,
-        reset: 24,
+        path:     '/dev/i2c-1',
+        address:  0x3C,
+        width:    128,
+        height:   64,
+        reset:    24,
         vccstate: SSD1306_SWITCHCAPVCC
       }
       options = default_options.merge(opts)
 
       @protocol = options[:protocol]
-      @path = options[:path]
-      @address = options[:address]
-      @width = options[:width]
-      @height = options[:height]
+      @path     = options[:path]
+      @address  = options[:address]
+      @width    = options[:width]
+      @height   = options[:height]
       @vccstate = options[:vccstate]
-      @pages = @height / 8
-      @buffer = [0]*(@width*@pages)
-      @cursor = Cursor.new
-      @reset = options[:reset]
+      @pages    = @height / 8
+      @buffer   = [0]*(@width*@pages)
+      @cursor   = Cursor.new
+      @reset    = options[:reset]
       if @protocol == :i2c
         @interface = I2C.create(@path)
       elsif @protocol == :spi
@@ -187,6 +187,10 @@ module SSD1306
     end
 
     def font_size(new_size)
+      return @cursor.size
+    end
+
+    def font_size=(new_size)
       @cursor.size = new_size
     end
 
