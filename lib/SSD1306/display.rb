@@ -187,6 +187,10 @@ module SSD1306
     end
 
     def font_size(new_size)
+      return @cursor.size
+    end
+
+    def font_size=(new_size)
       @cursor.size = new_size
     end
 
