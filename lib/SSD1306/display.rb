@@ -186,7 +186,7 @@ module SSD1306
       string
     end
 
-    def font_size(new_size)
+    def font_size
       return @cursor.size
     end
 
@@ -194,12 +194,12 @@ module SSD1306
       @cursor.size = new_size
     end
 
-    #TODO Implement Contrast functionality
+    # TODO: Implement Contrast functionality
     def set_contrast(contrast)
       raise "Contrast not yet implemented"
     end
 
-    #TODO Implement Dimming functionality
+    # TODO: Implement Dimming functionality
     def dim(dim)
       raise "Dim not implemented yet"
     end

@@ -38,7 +38,7 @@ Writing text on the display is simple:
 ```ruby
 disp.println "This is my IP Address:"
 disp.println "" # The same as disp.print "\n"
-disp.font_size 2
+disp.font_size = 2
 disp.println ip_address
 disp.display!
 ```
@@ -53,7 +53,7 @@ disp.image(image) # Pass in an RMagick image object
 disp.display!
 ```
 
-They display can also be easily cleared:
+The display can also be easily cleared:
 
 ```ruby
 disp.clear
@@ -63,7 +63,7 @@ disp.display!
 disp.clear!
 ```
 
-Check out the source code for additional information.  It's not very hard to read.
+Check out the source code for additional information.
 
 ## To-do
 
