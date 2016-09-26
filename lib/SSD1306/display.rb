@@ -64,9 +64,9 @@ module SSD1306
       if @protocol == :i2c
         @interface = I2C.create(@path)
       elsif @protocol == :spi
-        raise "SPI Not Supported Currently"
+        raise 'SPI Not Supported Currently'
       else
-        raise "Unrecognized protocol"
+        raise 'Unrecognized protocol'
       end
 
       # For 128 x 64 display
@@ -196,12 +196,12 @@ module SSD1306
 
     # TODO: Implement Contrast functionality
     def set_contrast(contrast)
-      raise "Contrast not yet implemented"
+      raise 'Contrast not yet implemented'
     end
 
     # TODO: Implement Dimming functionality
     def dim(dim)
-      raise "Dim not implemented yet"
+      raise 'Dim not implemented yet'
     end
 
     protected
