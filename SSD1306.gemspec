@@ -6,8 +6,8 @@ require 'SSD1306/version'
 Gem::Specification.new do |spec|
   spec.name          = "SSD1306"
   spec.version       = SSD1306::VERSION
-  spec.authors       = ["Xavier Bick"]
-  spec.email         = ["fxb9500@gmail.com"]
+  spec.authors       = ["Xavier Bick", "Jacob Killelea"]
+  spec.email         = ["fxb9500@gmail.com", "Jkillelea@protonmail.ch"]
   spec.license       = 'MIT'
 
   spec.summary       = %q{A library for the SSD1306 OLED Display}
