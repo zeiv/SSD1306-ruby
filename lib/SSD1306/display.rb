@@ -204,12 +204,13 @@ module SSD1306
       # dim = true: display is dimmed
       # dim = false: display is normal
       contrast = 0 # assume dim
-      if not dim
+      unless dim
         if @vccstate == SSD1306_EXTERNALVCC
           contrast = 0x9F
         else
           contrast = 0xCF
         end
+      end
       self.command SSD1306_SETCONTRAST
       self.command contrast
     end
