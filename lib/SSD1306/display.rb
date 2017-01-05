@@ -200,9 +200,23 @@ module SSD1306
     end
 
     # TODO: Implement Dimming functionality
+    # Dim the display
+    # dim = true: display is dimmed
+    # dim = false: display is normal
     def dim(dim)
-      raise 'Dim not implemented yet'
+      # raise 'Dim not implemented yet'
+      if dim
+        contrast = 0
+      elsif @vccstate == SSD1306_EXTERNALVCC
+        contrast = 0x9F
+      else
+        contrast = 0xCF
+      end
+      puts contrast
+      self.command SSD1306_SETCONTRAST
+      self.command contrast
     end
+
 
     protected
 
