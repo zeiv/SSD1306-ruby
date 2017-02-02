@@ -45,6 +45,16 @@ disp.println ip_address
 disp.display!
 ```
 
+You can also display monochrome images:
+
+```ruby
+include Magick  # RMagick is a dependency
+image = Image.read("path/to/my/image.png").first # Image.read returns an array
+
+disp.image(image) # Pass in an RMagick image object
+disp.display!
+```
+
 The display can also be easily cleared:
 
 ```ruby
