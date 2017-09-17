@@ -70,26 +70,31 @@ module SSD1306
       end
 
       # For 128 x 64 display
-      if @height == 64
-        self.command SSD1306_DISPLAYOFF
-        self.command SSD1306_SETDISPLAYCLOCKDIV
-        self.command 0x80
-        self.command SSD1306_SETMULTIPLEX
-        self.command 0x3F
-        self.command SSD1306_SETDISPLAYOFFSET
-        self.command 0x0
-        self.command(SSD1306_SETSTARTLINE | 0x0)
-        self.command SSD1306_CHARGEPUMP
-        if @vccstate == SSD1306_EXTERNALVCC
-          self.command 0x10
-        else
-          self.command 0x14
-        end
-        self.command SSD1306_MEMORYMODE
-        self.command 0x00
-        self.command(SSD1306_SEGREMAP | 0x1)
-        self.command SSD1306_COMSCANDEC
-        self.command SSD1306_SETCOMPINS
+      # Common Command
+      self.command SSD1306_DISPLAYOFF
+      self.command SSD1306_SETDISPLAYCLOCKDIV
+      self.command 0x80
+      self.command SSD1306_SETMULTIPLEX
+        #self.command 0x3F
+        self.command @height-1
+      self.command SSD1306_SETDISPLAYOFFSET
+      self.command 0x0
+      self.command(SSD1306_SETSTARTLINE | 0x0)
+      self.command SSD1306_CHARGEPUMP
+      if @vccstate == SSD1306_EXTERNALVCC
+        self.command 0x10
+      else
+        self.command 0x14
+      end
+      self.command SSD1306_MEMORYMODE
+      self.command 0x00
+      self.command(SSD1306_SEGREMAP | 0x1)
+      self.command SSD1306_COMSCANDEC
+      self.command SSD1306_SETCOMPINS
+
+      # each size command
+      case @height
+      when 64 #128x64
         self.command 0x12
         self.command SSD1306_SETCONTRAST
         if @vccstate == SSD1306_EXTERNALVCC
@@ -97,17 +102,35 @@ module SSD1306
         else
           self.command 0xCf
         end
-        self.command SSD1306_SETPRECHARGE
+
+      when 32 #128x32
+        self.command 0x02
+        self.command SSD1306_SETCONTRAST
+        self.command 0x8f
+
+      when 16 #96x16 ?
+        self.command 0x02
+        self.command SSD1306_SETCONTRAST
         if @vccstate == SSD1306_EXTERNALVCC
-          self.command 0x22
+          self.command 0x10
         else
-          self.command 0xF1
+          self.command 0xAF
         end
-        self.command SSD1306_SETVCOMDETECT
-        self.command 0x40
-        self.command SSD1306_DISPLAYALLON_RESUME
-        self.command SSD1306_NORMALDISPLAY
+
+      else
       end
+
+      # Common Command
+      self.command SSD1306_SETPRECHARGE
+      if @vccstate == SSD1306_EXTERNALVCC
+        self.command 0x22
+      else
+        self.command 0xF1
+      end
+      self.command SSD1306_SETVCOMDETECT
+      self.command 0x40
+      self.command SSD1306_DISPLAYALLON_RESUME
+      self.command SSD1306_NORMALDISPLAY
 
       self.command SSD1306_DISPLAYON
       self.clear!
@@ -141,7 +164,9 @@ module SSD1306
       # Write buffer data
       # TODO: This works for I2C only
       control = 0x40
-      @interface.write @address, control, @buffer.pack('c*')
+      # p [ "DEBUG", @buffer]
+      @buf = @buffer.compact
+      @interface.write @address, control, @buf.pack('c*')
     end
 
     def image(image)
@@ -155,6 +180,7 @@ module SSD1306
             bits = bits << 1
             bits |= pix[(page*8*@width) + x + ((7-bit)*@width)] == 0 ? 0 : 1
           end
+          #          p [page,x,bits] unless bits
           @buffer[index] = bits
           index += 1
         end
@@ -185,6 +211,7 @@ module SSD1306
       self.print_char 10 # 10 is ASCII for \n
       string
     end
+    alias :puts :println
 
     def font_size
       return @cursor.size
@@ -237,9 +264,11 @@ module SSD1306
             end
             bytes = bytes.map {|b| b.to_i(2)}
             bytes.reverse!
+#            p bytes
+#            
             for page in 0...@cursor.size
               for x_interval in 0...@cursor.size
-                @buffer[@cursor.buffer_index(page) + i*@cursor.size + x_interval] = bytes[page]
+                @buffer[@cursor.buffer_index(page) + i*@cursor.size + x_interval] =  bytes[page]
               end
             end
           end
