@@ -1,5 +1,6 @@
 require 'i2c'
 require 'rmagick'
+include Magick
 
 require 'SSD1306/version'
 require 'SSD1306/font'
