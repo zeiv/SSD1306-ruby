@@ -47,7 +47,8 @@ module SSD1306
         width:    128,
         height:   64,
         reset:    24,
-        vccstate: SSD1306_SWITCHCAPVCC
+        vccstate: SSD1306_SWITCHCAPVCC,
+        rotated:  false
       }
       options = default_options.merge(opts)
 
@@ -61,6 +62,7 @@ module SSD1306
       @buffer   = [0]*(@width*@pages)
       @cursor   = Cursor.new
       @reset    = options[:reset]
+      @rotated  = options[:rotated]
       if @protocol == :i2c
         @interface = I2C.create(@path)
       elsif @protocol == :spi
@@ -107,6 +109,11 @@ module SSD1306
         self.command 0x40
         self.command SSD1306_DISPLAYALLON_RESUME
         self.command SSD1306_NORMALDISPLAY
+      end
+
+      if @rotated
+        self.command SSD1306_SEGREMAP
+        self.command SSD1306_COMSCANINC
       end
 
       self.command SSD1306_DISPLAYON
@@ -215,6 +222,16 @@ module SSD1306
       self.command contrast
     end
 
+    # Invert the display
+    def invert(invert)
+      # invert = true: display is inverted
+      # invert = false: display is normal
+      if invert
+        self.command SSD1306_INVERTDISPLAY
+      else
+        self.command SSD1306_NORMALDISPLAY
+      end
+    end
 
     protected
 
